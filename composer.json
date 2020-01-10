@@ -3,6 +3,7 @@
     "description": "A CLI tool to check you system status",
     "type": "project",
     "license": "GPL-3.0-only",
+    "version": "1.0.0",
     "authors": [
         {
             "name": "David Lumaye",

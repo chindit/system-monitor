@@ -34,7 +34,7 @@ class FtpBackup implements BackupInterface
 			return false;
 		}
 
-		$upload = ftp_put($ftpConnection, '/', $file, FTP_BINARY);
+		$upload = ftp_put($ftpConnection, substr($file, 4), $file, FTP_BINARY);
 
 		ftp_close($ftpConnection);
 

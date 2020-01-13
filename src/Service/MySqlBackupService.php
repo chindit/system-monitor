@@ -73,6 +73,8 @@ class MySqlBackupService
 	public function cleanFiles(): void
 	{
 		$this->filesystem->remove($this->directory);
+		$this->filesystem->remove($this->backup);
+		$this->filesystem->remove(substr($this->backup, 0, -5));
 	}
 
 	public function getBackupFilePath(): string

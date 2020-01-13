@@ -5,13 +5,9 @@ namespace App\Command;
 use App\Service\BackupInterface;
 use App\Service\MySqlBackupService;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Process\Process;
 
 class DatabaseBackupCommand extends Command
 {
@@ -31,8 +27,6 @@ class DatabaseBackupCommand extends Command
     {
         $this
             ->setDescription('Backup a database')
-            ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
         ;
     }
 

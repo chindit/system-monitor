@@ -65,15 +65,15 @@ class AlertingService
 	{
 		$accounts = $this->smsApi->getAccounts();
 		$this->smsApi->setAccount($accounts[0]);
-		//try {
+		try {
 			$sms = $this->smsApi->createMessage(false);
 			$sms->addReceiver($this->smsReceiver);
 			$sms->setIsMarketing(false);
 			$sms->send($message);
 
 			return true;
-		/*} catch (\Exception $e) {
+		} catch (\Exception $e) {
 			return false;
-		}*/
+		}
 	}
 }

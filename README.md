@@ -12,11 +12,6 @@
 
 Enjoy your `.phar`.  You can just run it with `php system-monitor.php services:check`
 
-### As a composer package
-Require `chindit/system-monitor` and you're good to go.
-
-Call `php vendor/bin/console services:check`
-
 ## Usage
 Just call `php bin/console services:check`.
 

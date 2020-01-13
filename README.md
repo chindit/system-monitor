@@ -13,9 +13,14 @@
 Enjoy your `.phar`.  You can just run it with `php system-monitor.php services:check`
 
 ## Usage
+
+### Monitor services
 Just call `php bin/console services:check`.
 
 Two parameters are available:
 * `--no-notification` : does not send any email nor SMS
 * `--no-restart` : does not try to restart services
 
+### Backup database
+Call `php bin/console database:backup` (or `./system-monitor.phar database:backup` if you
+are using the PHAR).

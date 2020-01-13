@@ -23,6 +23,19 @@ services:
             $emailReceiver: '%env(EMAIL_RECEIVER)%'
             $smsReceiver: '%env(SMS_RECEIVER)%'
 
+    App\Service\MySqlBackupService:
+        arguments:
+            $mysqlUser: '%env(MYSQL_USER)%'
+            $mysqlPassword: '%env(MYSQL_PASSWORD)%'
+
+    App\Service\FtpBackup:
+        arguments:
+            $server: '%env(FTP_SERVER)%'
+            $username: '%env(FTP_USER)%'
+            $password: '%env(FTP_PASSWORD)%'
+
+    App\Service\BackupInterface: '@App\Service\FtpBackup'
+
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
     App\Controller\:

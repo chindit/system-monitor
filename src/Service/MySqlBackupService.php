@@ -48,6 +48,9 @@ class MySqlBackupService
 		$backupProcess = Process::fromShellCommandline(sprintf('mysql -u%1$s -p%2$s -N -e \'show databases\' | while read dbname; do mysqldump -u%1$s -p%2$s --complete-insert --routines --triggers --single-transaction "$dbname" > "%3$s$dbname".sql; done;', $this->mysqlUser, $this->mysqlPassword, $this->directory));
 		$backupProcess->run();
 
+		if (!$backupProcess->isSuccessful()) {
+			dump($backupProcess->getErrorOutput());
+		}
 		return $backupProcess->isSuccessful();
 	}
 

@@ -36,6 +36,11 @@ services:
 
     App\Service\BackupInterface: '@App\Service\FtpBackup'
 
+    App\Service\MirrorService:
+        arguments:
+            $mirrorName: '%env(MIRROR_NAME)%'
+            $storagePath: '%env(MIRROR_LOCAL_PATH)%'
+
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
     App\Controller\:

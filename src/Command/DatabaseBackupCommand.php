@@ -61,6 +61,7 @@ class DatabaseBackupCommand extends Command
 		$io->comment('Starting upload');
 		if (!$this->backup->save($this->sqlBackupService->getBackupFilePath()))
 		{
+			$io->error($this->backup->getLastError());
 			$io->error('Upload to FTP failed.  Stopping process');
 
 			return 0;

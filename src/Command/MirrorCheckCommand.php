@@ -11,11 +11,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class MirrorCheckCommand extends Command
 {
     protected static $defaultName = 'mirror:check';
-
-	/**
-	 * @var MirrorService
-	 */
-	private $mirrorService;
+	private MirrorService $mirrorService;
 
 	protected function configure()
     {

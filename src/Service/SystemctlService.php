@@ -6,8 +6,8 @@ use Symfony\Component\Process\Process;
 
 class SystemctlService
 {
-	private $systemStatus = 'not-checked';
-	private $failedServicesCount = -1;
+	private string $systemStatus = 'not-checked';
+	private int $failedServicesCount = -1;
 
 	public function isSystemDegraded(): bool
 	{

@@ -8,30 +8,12 @@ use Symfony\Component\Process\Process;
 
 class MySqlBackupService
 {
-	/**
-	 * @var string
-	 */
-	private $mysqlUser;
+	private string $mysqlUser;
+	private string $mysqlPassword;
+	private Filesystem $filesystem;
+	private string $directory;
+	private string $backup;
 
-	/**
-	 * @var string
-	 */
-	private $mysqlPassword;
-
-	/**
-	 * @var Filesystem
-	 */
-	private $filesystem;
-
-	/**
-	 * @var string
-	 */
-	private $directory;
-
-	/**
-	 * @var string
-	 */
-	private $backup;
 
 	public function __construct(Filesystem $filesystem, string $mysqlUser, string $mysqlPassword)
 	{

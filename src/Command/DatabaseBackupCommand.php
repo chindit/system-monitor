@@ -12,16 +12,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class DatabaseBackupCommand extends Command
 {
     protected static $defaultName = 'database:backup';
+	private MySqlBackupService $sqlBackupService;
+	private BackupInterface $backup;
 
-	/**
-	 * @var MySqlBackupService
-	 */
-	private $sqlBackupService;
-
-	/**
-	 * @var BackupInterface
-	 */
-	private $backup;
 
 	protected function configure()
     {

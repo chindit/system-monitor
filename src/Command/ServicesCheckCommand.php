@@ -12,19 +12,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class ServicesCheckCommand extends Command
 {
-    protected static $defaultName = 'services:check';
-
-	/**
-	 * @var SystemctlService
-	 */
-	private $systemctlService;
-
-	/**
-	 * @var AlertingService
-	 */
-	private $alertingService;
-
-	private $quiet = false;
+	protected static $defaultName = 'services:check';
+	private SystemctlService $systemctlService;
+	private AlertingService $alertingService;
+	private bool $quiet = false;
 
 	public function __construct(SystemctlService $systemctlService, AlertingService $alertingService)
     {

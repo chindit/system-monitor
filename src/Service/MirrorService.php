@@ -7,45 +7,15 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class MirrorService
 {
-	/**
-	 * @var HttpClientInterface
-	 */
-	private $httpClient;
+	private HttpClientInterface $httpClient;
+	private string $mirrorName;
+	private string $storagePath;
+	private AlertingService $alertingService;
+	private int $completionPercentage = 0;
+	private Filesystem $filesystem;
+	private \DateTimeImmutable $lastSync;
+	private \DateTimeImmutable $lastUpdate;
 
-	/**
-	 * @var string
-	 */
-	private $mirrorName;
-
-	/**
-	 * @var string
-	 */
-	private $storagePath;
-
-	/**
-	 * @var AlertingService
-	 */
-	private $alertingService;
-
-	/**
-	 * @var int
-	 */
-	private $completionPercentage = 0;
-
-	/**
-	 * @var Filesystem
-	 */
-	private $filesystem;
-
-	/**
-	 * @var \DateTimeImmutable
-	 */
-	private $lastSync;
-
-	/**
-	 * @var \DateTimeImmutable
-	 */
-	private $lastUpdate;
 
 	public function __construct(HttpClientInterface $httpClient, AlertingService $alertingService, Filesystem $filesystem, string $mirrorName, string $storagePath)
 	{
@@ -76,9 +46,9 @@ class MirrorService
 
 				if (!isset($mirror['completion_pct']) || $mirror['completion_pct'] < 0.95) {
 					$this->alertingService->sendMail('Mirror out of sync',
-					                                 sprintf('Mirror is out of sync.  Completion is %f%%', round($mirror['completion_pct'], 2))
+					                                 sprintf('Mirror is out of sync.  Completion is %f%%', round($mirror['completion_pct'] * 100, 2))
 					);
-					$this->alertingService->sendSMS(sprintf('Mirror is out of sync.  Actual completion is %f%%', round($mirror['completion_pct'], 2)));
+					$this->alertingService->sendSMS(sprintf('Mirror is out of sync.  Actual completion is %f%%', round($mirror['completion_pct'] * 100, 2)));
 
 					return true;
 				}

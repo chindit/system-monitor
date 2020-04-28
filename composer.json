@@ -27,7 +27,7 @@
         "symfony/yaml": "5.0.*"
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.14"
+        "symfony/maker-bundle": "^1.15"
     },
     "bin": [
         "bin/console"

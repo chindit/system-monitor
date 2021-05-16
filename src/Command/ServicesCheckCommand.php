@@ -44,11 +44,11 @@ class ServicesCheckCommand extends Command
 
         $io->comment('Checking services status');
 
-        /*if (!$this->systemctlService->isSystemDegraded()) {
+        if (!$this->systemctlService->isSystemDegraded()) {
         	$io->success('System is running smoothly.  Enjoy');
 
         	return 0;
-        }*/
+        }
 
         $io->warning('System is unstable');
 

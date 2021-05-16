@@ -4,16 +4,13 @@ namespace App\Service;
 
 class FtpBackup implements BackupInterface
 {
-	private string $server;
-	private string $username;
-	private string $password;
 	private string $error = '';
 
-	public function __construct(string $server, string $username, string $password)
+	public function __construct(
+		private string $server,
+		private string $username,
+		private string $password)
 	{
-		$this->server = $server;
-		$this->username = $username;
-		$this->password = $password;
 	}
 
 	public function save(string $file): bool

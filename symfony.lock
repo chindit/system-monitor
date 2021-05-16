@@ -17,6 +17,9 @@
     "guzzlehttp/streams": {
         "version": "3.0.0"
     },
+    "myclabs/php-enum": {
+        "version": "1.8.0"
+    },
     "nikic/php-parser": {
         "version": "v4.3.0"
     },
@@ -68,6 +71,9 @@
     },
     "symfony/dependency-injection": {
         "version": "v5.0.2"
+    },
+    "symfony/deprecation-contracts": {
+        "version": "v2.4.0"
     },
     "symfony/dotenv": {
         "version": "v5.0.2"
@@ -155,14 +161,23 @@
     "symfony/mime": {
         "version": "v5.0.2"
     },
+    "symfony/polyfill-intl-grapheme": {
+        "version": "v1.22.1"
+    },
     "symfony/polyfill-intl-idn": {
         "version": "v1.13.1"
+    },
+    "symfony/polyfill-intl-normalizer": {
+        "version": "v1.22.1"
     },
     "symfony/polyfill-mbstring": {
         "version": "v1.13.1"
     },
     "symfony/polyfill-php73": {
         "version": "v1.13.1"
+    },
+    "symfony/polyfill-php80": {
+        "version": "v1.22.1"
     },
     "symfony/process": {
         "version": "v5.0.2"
@@ -183,6 +198,9 @@
     },
     "symfony/service-contracts": {
         "version": "v2.0.1"
+    },
+    "symfony/string": {
+        "version": "v5.2.8"
     },
     "symfony/var-dumper": {
         "version": "v5.0.2"

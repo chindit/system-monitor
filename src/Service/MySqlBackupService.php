@@ -8,18 +8,12 @@ use Symfony\Component\Process\Process;
 
 class MySqlBackupService
 {
-	private string $mysqlUser;
-	private string $mysqlPassword;
-	private Filesystem $filesystem;
 	private string $directory;
 	private string $backup;
 
 
-	public function __construct(Filesystem $filesystem, string $mysqlUser, string $mysqlPassword)
+	public function __construct(private Filesystem $filesystem, private string $mysqlUser, private string $mysqlPassword)
 	{
-		$this->mysqlUser = $mysqlUser;
-		$this->mysqlPassword = $mysqlPassword;
-		$this->filesystem = $filesystem;
 		$this->directory = $this->getBackupDirectory();
 		$this->backup = '';
 	}
@@ -102,7 +96,6 @@ class MySqlBackupService
 	protected function getFilename(): string
 	{
 		$date = new \DateTimeImmutable();
-
 
 		return 'backup-database-' . $date->format('Y-m-d-h-i-s');
 	}

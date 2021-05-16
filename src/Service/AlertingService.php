@@ -8,20 +8,14 @@ use Symfony\Component\Mime\Email;
 
 class AlertingService
 {
-	private MailerInterface $mailer;
-	private SmsApi $smsApi;
-	private string $emailReceiver;
-	private string $smsReceiver;
-	private string $emailSender;
-
-
-	public function __construct(MailerInterface $mailer, SmsApi $smsApi, string $emailSender, string $emailReceiver, string $smsReceiver)
+	public function __construct(
+		private MailerInterface $mailer,
+		private SmsApi $smsApi,
+		private string $emailSender,
+		private string $emailReceiver,
+		private string $smsReceiver
+	)
 	{
-		$this->mailer = $mailer;
-		$this->smsApi = $smsApi;
-		$this->emailReceiver = $emailReceiver;
-		$this->smsReceiver = $smsReceiver;
-		$this->emailSender = $emailSender;
 	}
 
 	public function sendMail(string $object, string $body): bool

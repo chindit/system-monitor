@@ -12,8 +12,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class DatabaseBackupCommand extends Command
 {
     protected static $defaultName = 'database:backup';
-	private MySqlBackupService $sqlBackupService;
-	private BackupInterface $backup;
 
 
 	protected function configure()
@@ -23,11 +21,9 @@ class DatabaseBackupCommand extends Command
         ;
     }
 
-    public function __construct(MySqlBackupService $sqlBackupService, BackupInterface $backup)
+    public function __construct(private MySqlBackupService $sqlBackupService, private BackupInterface $backup)
     {
 	    parent::__construct();
-	    $this->sqlBackupService = $sqlBackupService;
-	    $this->backup = $backup;
     }
 
 	protected function execute(InputInterface $input, OutputInterface $output): int

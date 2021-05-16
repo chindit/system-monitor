@@ -11,19 +11,17 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class MirrorCheckCommand extends Command
 {
     protected static $defaultName = 'mirror:check';
-	private MirrorService $mirrorService;
 
 	protected function configure()
     {
         $this
-            ->setDescription('Add a short description for your command')
+            ->setDescription('Checks if mirror is up to date')
         ;
     }
 
-    public function __construct(MirrorService $mirrorService)
+    public function __construct(private MirrorService $mirrorService)
     {
 	    parent::__construct();
-	    $this->mirrorService = $mirrorService;
     }
 
 	protected function execute(InputInterface $input, OutputInterface $output): int

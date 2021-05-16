@@ -2,6 +2,10 @@
 
 namespace App\Command;
 
+use App\Enum\NotificationType;
+use App\Enum\Priority;
+use App\Event\NotificationEvent;
+use App\Model\Notification;
 use App\Service\AlertingService;
 use App\Service\SystemctlService;
 use Symfony\Component\Console\Command\Command;
@@ -9,19 +13,19 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ServicesCheckCommand extends Command
 {
 	protected static $defaultName = 'services:check';
-	private SystemctlService $systemctlService;
-	private AlertingService $alertingService;
 	private bool $quiet = false;
 
-	public function __construct(SystemctlService $systemctlService, AlertingService $alertingService)
+	public function __construct(
+		private SystemctlService $systemctlService,
+		private EventDispatcherInterface $dispatcher
+	)
     {
 	    parent::__construct();
-	    $this->systemctlService = $systemctlService;
-	    $this->alertingService = $alertingService;
     }
 
 	protected function configure()
@@ -36,15 +40,15 @@ class ServicesCheckCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $this->quiet = $input->getOption('no-notification');
+        $this->quiet = (bool)$input->getOption('no-notification');
 
         $io->comment('Checking services status');
 
-        if (!$this->systemctlService->isSystemDegraded()) {
+        /*if (!$this->systemctlService->isSystemDegraded()) {
         	$io->success('System is running smoothly.  Enjoy');
 
         	return 0;
-        }
+        }*/
 
         $io->warning('System is unstable');
 
@@ -54,10 +58,20 @@ class ServicesCheckCommand extends Command
         	$io->comment('No failed services detected');
 
         	if (!$this->quiet) {
-		        $this->alertingService->sendMail(
-					'Degraded state without failed services',
-					sprintf("0 failed services have been found but system state is degraded.\n\nCurrent status is \"%s\"", $this->systemctlService->getCurrentSystemStatus())
-				);
+        		$this->dispatcher->dispatch(
+        			new NotificationEvent(
+	                    new Notification(
+		                    'Degraded state without failed services',
+					        sprintf(
+					            "0 failed services have been found but system state is degraded.\n\nCurrent status is \"%s\"",
+						        $this->systemctlService->getCurrentSystemStatus()
+					        ),
+					        Priority::LOW(),
+					        NotificationType::SYSTEM_DEGRADED(),
+				        ),
+			        ),
+			        NotificationEvent::NAME
+		        );
 	        }
 
 			return 0;
@@ -68,10 +82,22 @@ class ServicesCheckCommand extends Command
         $io->warning(sprintf('%d services are failed.  Services are %s', $failedServicesCount, implode(',', $failedServices)));
 
         if ($input->getOption('no-restart')) {
-	        if (!$this->quiet) {
-		        $this->alertingService->sendMail(
-			        'Degraded system state',
-			        sprintf("%d failed services have been found.\n\nFailing services are :\n%s", $failedServicesCount, implode("\n", $failedServices))
+	        if (!$this->quiet)
+	        {
+		        $this->dispatcher->dispatch(
+		        	new NotificationEvent(
+				        new Notification(
+					        'Degraded system state',
+					        sprintf(
+						        "%d failed services have been found.\n\nFailing services are :\n%s",
+						        $failedServicesCount,
+						        implode("\n", $failedServices)
+					        ),
+					        Priority::MEDIUM(),
+					        NotificationType::SYSTEM_DEGRADED(),
+				        )
+			        ),
+			        NotificationEvent::NAME
 		        );
 	        }
 
@@ -113,13 +139,19 @@ class ServicesCheckCommand extends Command
 	        	$io->success('All failed services were relaunched');
 		        if (!$this->quiet)
 		        {
-			        $this->alertingService->sendMail(
-				        'System restored - Services relaunched',
-				        sprintf(
-					        "%d services were failing.  All of there were relaunched and server is now stable.\n\n
-			        This is the list of failed services:\n",
-					        $failedServicesCount
-				        ) . implode("\n", $relaunchedServices)
+			        $this->dispatcher->dispatch(
+			        	new NotificationEvent(
+					        new Notification(
+						        'System restored - Services relaunched',
+						        sprintf(
+							        "%d services were failing.  All of there were relaunched and server is now stable.\n\nThis is the list of failed services:\n",
+							        $failedServicesCount
+						        ) . implode("\n", $relaunchedServices),
+						        Priority::MEDIUM(),
+						        NotificationType::SYSTEM_SERVICES_RELAUNCHED(),
+					        )
+				        ),
+				        NotificationEvent::NAME
 			        );
 		        }
 
@@ -128,11 +160,22 @@ class ServicesCheckCommand extends Command
 	        	$io->warning('All failed services have been relaunched but system is still unstable');
 	        	if (!$this->quiet)
 		        {
-		        	$this->alertingService->sendMail(
-		        		'System unstable despite services relaunch',
-				        sprintf("System was unstable.  %d services were relaunched but system is still unstable.\n\n
-				        Actual system status: %s\n\n
-				        Restarted services:\n", $failedServicesCount, $this->systemctlService->getCurrentSystemStatus()) . implode("\n", $relaunchedServices)
+			        $this->dispatcher->dispatch(
+			        	new NotificationEvent(
+					        new Notification(
+						        'System unstable despite services relaunch',
+						        sprintf(
+						            "System was unstable.  %d services were relaunched but system is still unstable.\n\n
+					                   Actual system status: %s\n\n
+					                   Restarted services:\n",
+							        $failedServicesCount,
+							        $this->systemctlService->getCurrentSystemStatus()) . implode("\n", $relaunchedServices
+						        ),
+						        Priority::MEDIUM(),
+						        NotificationType::SYSTEM_SERVICES_RELAUNCHED(),
+					        )
+				        ),
+				        NotificationEvent::NAME
 			        );
 		        }
 
@@ -147,17 +190,22 @@ class ServicesCheckCommand extends Command
 	        }
 	        if (!$this->quiet)
 	        {
-		        $this->alertingService->sendSMS(sprintf('System unstable.  Failed services: %s', implode(',', $servicesFailure)));
-
 		        $errorMessage = 'System is unstable.  Some services are actually failing.' . "\n\n" . 'Here are the failed services with their respective logs:' . "\n\n";
 		        foreach ($criticalServices as $service) {
 		        	$errorMessage .= $service['service'] . ' : ' . "\n" . $service['logs'] . "\n\n";
 		        }
 		        $errorMessage .= 'Please check these services as soon as possible.' . "\n" . 'Thanks';
 
-		        $this->alertingService->sendMail(
-		        	'System unstable.  Services in failure',
-			        $errorMessage
+		        $this->dispatcher->dispatch(
+		        	new NotificationEvent(
+				        new Notification(
+					        sprintf('System unstable.  Failed services: %s', implode(',', $servicesFailure)),
+					        $errorMessage,
+					        Priority::HIGH(),
+					        NotificationType::SYSTEM_SERVICES_RELAUNCHED(),
+				        )
+			        ),
+			        NotificationEvent::NAME
 		        );
 	        }
 

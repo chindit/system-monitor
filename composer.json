@@ -17,19 +17,19 @@
         "ext-iconv": "*",
         "myclabs/php-enum": "^1.8",
         "ovh/php-ovh-sms": "^1.0",
-        "symfony/cache": "5.2.*",
-        "symfony/console": "5.2.*",
-        "symfony/dotenv": "5.2.*",
-        "symfony/filesystem": "5.2.*",
-        "symfony/flex": "^1.12.2",
-        "symfony/framework-bundle": "5.2.*",
-        "symfony/http-client": "5.2.*",
-        "symfony/mailer": "5.2.*",
-        "symfony/process": "5.2.*",
-        "symfony/yaml": "5.2.*"
+        "symfony/cache": "5.3.*",
+        "symfony/console": "5.3.*",
+        "symfony/dotenv": "5.3.*",
+        "symfony/filesystem": "5.3.*",
+        "symfony/flex": "^1.13.3",
+        "symfony/framework-bundle": "5.3.*",
+        "symfony/http-client": "5.3.*",
+        "symfony/mailer": "5.3.*",
+        "symfony/process": "5.3.*",
+        "symfony/yaml": "5.3.*"
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.31"
+        "symfony/maker-bundle": "^1.33"
     },
     "bin": [
         "bin/console"
@@ -77,7 +77,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "5.2.*"
+            "require": "5.*"
         }
     }
 }
